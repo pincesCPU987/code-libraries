@@ -382,9 +382,20 @@ class Sensing {
 	constructor(p){
   	this.parent = p;
   }
-  touching(str){
-  	if(str == 'mouse'){
+  touching(o){
+  	if(o == 'mouse'){
     	return (this.parent.rect.x - (this.parent.rect.width / 2) <= mouseX && this.parent.rect.x - (this.parent.rect.width / 2) > mouseX - this.parent.rect.width) && (this.parent.rect.y - (this.parent.rect.height / 2) <= mouseY && this.parent.rect.y - (this.parent.rect.height / 2) > mouseY - this.parent.rect.height)
+    }
+    if(o instanceof Sprite){
+      return (this.parent.rect.x - (this.parent.rect.width / 2) <= o.rect.x + (o.rect.width / 2) && this.parent.rect.x - (this.parent.rect.width / 2) > this.parent.rect.x - (this.parent.rect.width / 2)) && (this.parent.rect.y - (this.parent.rect.height / 2) <= o.rect.y + (o.rect.height / 2) && this.parent.rect.y - (this.parent.rect.height / 2) > this.parent.rect.y - (this.parent.rect.height / 2))
+    }
+  }
+  distanceTo(o){
+    if(o == 'mouse'){
+      return Math.sqrt(Math.pow(mouseX - this.parent.rect.x, 2) + Math.pow(mouseY - this.parent.rect.y, 2))
+    }
+    if(o instanceof Sprite){
+      return Math.sqrt(Math.pow(o.rect.x - this.parent.rect.x, 2) + Math.pow(o.rect.y - this.parent.rect.y, 2))
     }
   }
 }
