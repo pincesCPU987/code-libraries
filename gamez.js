@@ -1,6 +1,6 @@
 /*
 To load files, most websites do not support hotlinking.
-Instead, download the file and use data URI converter like mine:
+Instead, download the file and use a data URI converter like mine:
 https://pincescpu987.github.io/js_tools/binary/ (For mine, use the 'Generate data URI' button)
 */
 
@@ -66,15 +66,14 @@ class Game {
 
 class Screen {
 	constructor(w,h){
-  	this.width = w;
-    this.height = h;
+    this.rect = new ScreenRect(w, h);
     this.canvas = document.createElement('canvas');
     this.bgColor = '#000000';
     this.canvas.onmousemove = function(e){
     	updateMouse(e);
     }
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
+    this.canvas.width = this.rect.width;
+    this.canvas.height = this.rect.height;
     document.body.appendChild(this.canvas);
   }
   createSprite(n){
@@ -136,7 +135,7 @@ class Motion {
   }
   goTo(t){
   	if(t == 'random'){
-    	var x = Math.floor(Math.random() * this.parent.screen.width);
+    	var x = Math.floor(Math.random() * this.parent.screen.rect.width);
       var y = Math.floor(Math.random() * this.parent.screen.height);
       this.parent.rect.x = x;
       this.parent.rect.y = y;
@@ -386,6 +385,18 @@ class Sensing {
   	if(o == 'mouse'){
     	return (this.parent.rect.x - (this.parent.rect.width / 2) <= mouseX && this.parent.rect.x - (this.parent.rect.width / 2) > mouseX - this.parent.rect.width) && (this.parent.rect.y - (this.parent.rect.height / 2) <= mouseY && this.parent.rect.y - (this.parent.rect.height / 2) > mouseY - this.parent.rect.height)
     }
+    if(o == 'bottom-edge'){
+      return ((this.parent.rect.y + (this.parent.rect.height / 2)) >= this.parent.screen.rect.height);
+    }
+    if(o == 'top-edge'){
+      return ((this.parent.rect.y - (this.parent.rect.height / 2)) <= 0);
+    }
+    if(o == 'left-edge'){
+      return ((this.parent.rect.x - (this.parent.rect.width / 2)) <= 0);
+    }
+    if(o == 'right-edge'){
+      return ((this.parent.rect.x + (this.parent.rect.width / 2)) >= this.parent.screen.rect.width);
+    }
     if(o instanceof Sprite){
       return (this.parent.rect.x - (this.parent.rect.width / 2) <= o.rect.x + (o.rect.width / 2) && this.parent.rect.x - (this.parent.rect.width / 2) > this.parent.rect.x - (this.parent.rect.width / 2)) && (this.parent.rect.y - (this.parent.rect.height / 2) <= o.rect.y + (o.rect.height / 2) && this.parent.rect.y - (this.parent.rect.height / 2) > this.parent.rect.y - (this.parent.rect.height / 2))
     }
@@ -406,6 +417,16 @@ class Rect{
     this.y = 0;
     this.direction = 90;
     this.parent = p;
+  }
+}
+
+class ScreenRect extends Rect {
+  constructor(w, h){
+    super();
+    this.parent = null;
+    this.direction = null;
+    this.width = w;
+    this.height = h;
   }
 }
 
